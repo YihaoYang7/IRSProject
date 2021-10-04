@@ -44,8 +44,6 @@ public class IndexBot
             for (File f : files)
             {
                 File[] texts = f.listFiles();
-
-
                 for (File text : texts)
                 {
                     BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(text),
