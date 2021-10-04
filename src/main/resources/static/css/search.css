@@ -1,0 +1,26 @@
+.result-container {
+    width: 100%;
+    height: auto;
+    margin: 10px 5px;
+    flex-direction: column;
+    align-items: start;
+}
+
+.result-path {
+    margin: 20px 10px 10px 5px;
+}
+
+.result-title {
+    margin: 5px 10px 10px 5px;
+}
+
+.result-content {
+    margin: 5px 10px 10px 5px;
+}
+
+.result-border{
+    border-style: groove;
+    border-radius: 5px;
+    border-width: thin;
+    margin: 10px 5px
+}
