@@ -14,6 +14,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
@@ -38,7 +41,7 @@ public class IndexBot
     {
         IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
         config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-        return new IndexWriter(directory,config);
+        return new IndexWriter(directory, config);
     }
 
     public void createIndex()
@@ -62,7 +65,8 @@ public class IndexBot
                     int abstractPosition = t.toLowerCase(Locale.ROOT).indexOf("abstract");
                     int introductionPosition = t.toLowerCase(Locale.ROOT).indexOf("introduction");
                     if (abstractPosition == -1 || abstractPosition > 1000) abstractPosition = 400;
-                    if (introductionPosition == -1 || introductionPosition < abstractPosition) introductionPosition = abstractPosition + 300;
+                    if (introductionPosition == -1 || introductionPosition < abstractPosition)
+                        introductionPosition = abstractPosition + 300;
                     String titleText = t.substring(0, abstractPosition);
                     String abstractText = t.substring(abstractPosition, introductionPosition);
                     StringBuilder contentText =
@@ -77,10 +81,10 @@ public class IndexBot
                     br.close();
 
                     Document doc = new Document();
-                    doc.add(new TextField("title",titleText,Field.Store.YES));
-                    doc.add(new TextField("abstract", abstractText,Field.Store.YES));
-                    doc.add(new TextField("content", contentText.toString(),Field.Store.YES));
-                    doc.add(new TextField("path",text.getAbsolutePath(),Field.Store.YES));
+                    doc.add(new TextField("title", titleText, Field.Store.YES));
+                    doc.add(new TextField("abstract", abstractText, Field.Store.YES));
+                    doc.add(new TextField("content", contentText.toString(), Field.Store.YES));
+                    doc.add(new TextField("path", text.getAbsolutePath(), Field.Store.YES));
                     writer.addDocument(doc);
                 }
             }

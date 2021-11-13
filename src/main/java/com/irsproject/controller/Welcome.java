@@ -2,6 +2,7 @@ package com.irsproject.controller;
 
 import com.google.gson.Gson;
 import com.irsproject.util.IndexBot;
+import com.irsproject.util.IndexCreator;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -22,8 +23,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -81,7 +80,7 @@ public class Welcome
                 String[] k = keywords.split(":\"");
                 k[1] = k[1].substring(0, k[1].length() - 1);
                 QueryParser parser = new QueryParser(k[0], analyzer);
-                Query query = parser.parse(k[1]);
+                org.apache.lucene.search.Query query = parser.parse(k[1]);
                 TopDocs docs = searcher.search(query, 50);
                 for (ScoreDoc scoreDoc : docs.scoreDocs)
                 {
@@ -124,7 +123,7 @@ public class Welcome
             {
                 String[] fields = {"title", "abstract", "content"};
                 QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
-                Query query = parser.parse(keywords);
+                org.apache.lucene.search.Query query = parser.parse(keywords);
                 TopDocs docs = searcher.search(query, 50);
                 for (ScoreDoc scoreDoc : docs.scoreDocs)
                 {
