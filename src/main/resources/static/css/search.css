@@ -6,6 +6,15 @@
     align-items: start;
 }
 
+em{
+    color: #FF5722;
+    font-weight: bolder;
+}
+
+a{
+    margin: 0px 0px 5px 5px;
+}
+
 .result-path {
     margin: 20px 10px 10px 5px;
 }
