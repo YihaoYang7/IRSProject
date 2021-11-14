@@ -1,0 +1,10 @@
+        $.ajax({
+            type: 'post',
+            url: '/spell',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (spellResults) {
+                $("#rd").append('<h1>' + spellResults + '</h1>');
+            }
+        });
