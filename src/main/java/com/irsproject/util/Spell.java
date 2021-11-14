@@ -49,7 +49,6 @@ public class Spell {
             }
         }
         if (count == list.size()) {
-            spellResults = null;
             spellResults = gson.toJson(spellList);
         }
         else {
