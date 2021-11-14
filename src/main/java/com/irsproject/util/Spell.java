@@ -44,13 +44,11 @@ public class Spell {
             suggestions[i] = str[0];
             if (keywordsarr[i].equals(suggestions[i].substring(0, suggestions[i].length() - 1)))
                 count ++;
-            else {
+            else
                 keywordsarr[i] = suggestions[i];
-            }
         }
-        if (count == list.size()) {
+        if (count == list.size())
             spellResults = gson.toJson(spellList);
-        }
         else {
             for (int i = 0; i < list.size(); i++) {
                 spellResults = spellResults + " " + keywordsarr[i];
