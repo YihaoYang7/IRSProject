@@ -21,7 +21,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.http.HttpRequest;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -51,19 +54,23 @@ public class SearchEngine
     }
 
     @RequestMapping("/home")
-    public String home()
+    public String home(HttpServletRequest request)
     {
+        HttpSession session = request.getSession();
+        session.setAttribute("pageIndex", 1);
+        session.setAttribute("lastSearchKeywords", "");
         return "/home2";
     }
 
     @RequestMapping("/query2")
     @ResponseBody
-    public String queryByKeyWords(@RequestBody Map<String, String> p)
+    public String queryByKeyWords(@RequestBody Map<String, String> p, HttpServletRequest request)
     {
         String keywords = p.get("keywords");
         Pattern queryField = Pattern.compile("^(title|author):\".+\"");
         LinkedList<Map<String, Object>> results = new LinkedList<>();
         String queryResults = null;
+
         try
         {
             Properties properties = PropertiesLoaderUtils.loadProperties(new ClassPathResource("/application" +
@@ -77,20 +84,25 @@ public class SearchEngine
 
             if (queryField.matcher(keywords).matches())
             {
+                HttpSession session = this.sessionUtil(request, keywords);
+                int pageIndex = (int) session.getAttribute("pageIndex");
                 String[] k = keywords.split(":\"");
                 k[1] = k[1].substring(0, k[1].length() - 1);
+
                 QueryParser parser = new QueryParser(k[0], analyzer);
                 Query query = parser.parse(k[1]);
+//                TopDocs docs = searcher.search(query, 50);
+                TopDocs docs = this.pageSearch(pageIndex, 20, query, searcher);
+
                 Formatter formatter = new SimpleHTMLFormatter("<em>", "</em>");
                 QueryScorer scorer = new QueryScorer(query);
                 Highlighter highlighter = new Highlighter(formatter, scorer);
-                TopDocs docs = searcher.search(query, 50);
                 for (ScoreDoc scoreDoc : docs.scoreDocs)
                 {
                     Document doc = searcher.doc(scoreDoc.doc);
                     HashMap<String, Object> result = new HashMap<>();
                     String hTitle = highlighter.getBestFragment(new StandardAnalyzer(), "title", doc.get("title"));
-                    result.put("title", hTitle == null ? doc.get("title") : hTitle );
+                    result.put("title", hTitle == null ? doc.get("title") : hTitle);
                     String hAuthors = highlighter.getBestFragment(new StandardAnalyzer(), "author", doc.get("author"));
                     result.put("authors", hAuthors == null ? doc.get("author") : hAuthors);
                     String source = doc.get("sources");
@@ -110,19 +122,25 @@ public class SearchEngine
             } else
             {
                 String[] fields = {"title", "author"};
+                HttpSession session = this.sessionUtil(request, keywords);
+                int pageIndex = (int) session.getAttribute("pageIndex");
+
                 QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
                 Query query = parser.parse(keywords);
+//                TopDocs docs = searcher.search(query, 50);
+                TopDocs docs = this.pageSearch(pageIndex, 20, query, searcher);
+
                 Formatter formatter = new SimpleHTMLFormatter("<em>", "</em>");
                 QueryScorer scorer = new QueryScorer(query);
                 Highlighter highlighter = new Highlighter(formatter, scorer);
-                TopDocs docs = searcher.search(query, 50);
+
                 for (ScoreDoc scoreDoc : docs.scoreDocs)
                 {
                     Document doc = searcher.doc(scoreDoc.doc);
                     HashMap<String, Object> result = new HashMap<>();
 //                    result.put("title", doc.get("title"));
                     String hTitle = highlighter.getBestFragment(new StandardAnalyzer(), "title", doc.get("title"));
-                    result.put("title", hTitle == null ? doc.get("title") : hTitle );
+                    result.put("title", hTitle == null ? doc.get("title") : hTitle);
                     String hAuthors = highlighter.getBestFragment(new StandardAnalyzer(), "author", doc.get("author"));
                     result.put("authors", hAuthors == null ? doc.get("author") : hAuthors);
 
@@ -154,5 +172,44 @@ public class SearchEngine
             e.printStackTrace();
         }
         return queryResults;
+    }
+
+    private TopDocs pageSearch(int pageIndex, int pageSize, Query query, IndexSearcher searcher) throws IOException
+    {
+        ScoreDoc lastDoc = null;
+        if (pageIndex > 1)
+        {
+            int num = pageSize * (pageIndex - 1);
+            TopDocs tds = searcher.search(query, num);
+            lastDoc = tds.scoreDocs[num - 1];
+        }
+
+        return searcher.searchAfter(lastDoc, query, pageSize);
+    }
+
+    private HttpSession sessionUtil(HttpServletRequest request, String keywords)
+    {
+        HttpSession session = request.getSession(false);
+        if (session == null)
+        {
+            session = request.getSession();
+            session.setAttribute("pageIndex", 1);
+            session.setAttribute("lastSearchKeywords", keywords);
+        } else
+        {
+            String lastKeywords = (String) session.getAttribute("lastSearchKeywords");
+            int pageIndex = (int) session.getAttribute("pageIndex");
+            if (lastKeywords.equals(keywords))
+            {
+                pageIndex += 1;
+                session.setAttribute("pageIndex", pageIndex);
+            } else
+            {
+                pageIndex = 1;
+                session.setAttribute("pageIndex", pageIndex);
+                session.setAttribute("lastSearchKeywords", keywords);
+            }
+        }
+        return session;
     }
 }
