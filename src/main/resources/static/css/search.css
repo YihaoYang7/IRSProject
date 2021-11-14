@@ -12,7 +12,8 @@ em{
 }
 
 a{
-    margin: 0px 0px 5px 5px;
+    margin: 0px 10px 5px 5px;
+    color: blue;
 }
 
 .result-path {
@@ -32,4 +33,9 @@ a{
     border-radius: 5px;
     border-width: thin;
     margin: 10px 5px
+}
+
+.continue-search-block{
+    display: flex;
+    flex-wrap: nowrap;
 }
