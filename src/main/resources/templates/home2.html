@@ -63,7 +63,7 @@
         }
     });*/
 
-   /* $("#submitButton").click(function () {
+    $("#submitButton").click(function () {
         $("#rd").find("*").remove();
         var k = $("#autoComplete").val();
         var data = {
@@ -109,27 +109,7 @@
                 }
             }
         });
-    })*/
-
-   $("#submitButton").click(function () {
-       $("#rd").find("*").remove();
-       var k = $("#autoComplete").val();
-       var data = {
-           keywords: k
-       };
-       if (k === '') {
-           layer.msg('Please type keywords', {skin: 'layui-layer-molv'}, {time: 2})
-           return;
-       }
-       $.ajax({
-           type: 'post',
-           url: '/spell',
-           data: JSON.stringify(data),
-           dataType: 'json',
-           contentType: 'application/json',
-
-       });
-   })
+    })
 
     $(".continue-search-block").on('click', '#loadButton', function () {
         var k = $("#autoComplete").val();
