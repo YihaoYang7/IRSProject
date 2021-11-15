@@ -15,16 +15,24 @@ public class Input {
 
     @RequestMapping("/input")
     @ResponseBody
-    public String Words(@RequestBody Map<String, String> p) {
+        public String Words(@RequestBody Map<String, String> p) {
         String inputResults = null;
         String keywords = p.get("keywords");
         Gson gson = new Gson();
         ReadFile read = new ReadFile();
-        List<String> list = read.findWord(keywords);
-        if (list.size() > 10)
-            list = list.subList(0, 10);
-        LinkedList inputList = new LinkedList(list);
+        LinkedList inputList = new LinkedList();
+        ArrayList<String> arr = new ArrayList<String>();
+        StringTokenizer st = new StringTokenizer(keywords, " ");
+        while (st.hasMoreTokens())
+            arr.add(st.nextToken());
+        for(int i = 0 ;i < arr.size() ; i ++) {
+            List<String> list = read.findWord(arr.get(i));
+            if (list.size() > 10)
+                list = list.subList(0, 10);
+            inputList.add(list);
+        }
         inputResults = gson.toJson(inputList);
         return inputResults;
     }
+
 }
