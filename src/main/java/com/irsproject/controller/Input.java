@@ -15,7 +15,7 @@ public class Input {
 
     @RequestMapping("/input")
     @ResponseBody
-    public String SpellChecker(@RequestBody Map<String, String> p) {
+    public String Words(@RequestBody Map<String, String> p) {
         String inputResults = null;
         String keywords = p.get("keywords");
         Gson gson = new Gson();
