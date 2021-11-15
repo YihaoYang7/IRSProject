@@ -30,6 +30,7 @@ public class Input {
             if (list.size() > 10)
                 list = list.subList(0, 10);
             inputList.add(list);
+            inputList.add("|");
         }
         inputResults = gson.toJson(inputList);
         return inputResults;
