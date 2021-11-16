@@ -24,11 +24,15 @@ table tr td {
 }
 .hidden
 {
-    width: 200px;
+    width: 100%;
     z-index: 10;
     display: none;
-    border:1px solid rgb(80,160,91);
-    border-top:none;
+    border-style: solid;
+    border-width: 1px;
+    border-top-style: none;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+    border-color: rgb(210,210,210);
 }
 
 em {

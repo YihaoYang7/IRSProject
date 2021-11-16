@@ -30,7 +30,6 @@ public class Input {
             inputList.add(list);
         }
         inputResults = gson.toJson(inputList);
-        System.out.println(inputResults);
         return inputResults;
     }
 
