@@ -6,12 +6,37 @@
     align-items: start;
 }
 
-em{
+table tr td {
+    margin: 0;
+    padding: 0;
+}
+
+.item:hover
+{
+    background-color: Gray;
+    cursor:pointer;
+}
+.show
+{
+    width: 200px;
+    z-index: 10;
+    display: block;
+}
+.hidden
+{
+    width: 200px;
+    z-index: 10;
+    display: none;
+    border:1px solid rgb(80,160,91);
+    border-top:none;
+}
+
+em {
     color: #FF5722;
     font-weight: bolder;
 }
 
-a{
+a {
     margin: 0px 10px 5px 5px;
     color: blue;
 }
@@ -28,14 +53,14 @@ a{
     margin: 5px 10px 10px 5px;
 }
 
-.result-border{
+.result-border {
     border-style: groove;
     border-radius: 5px;
     border-width: thin;
     margin: 10px 5px
 }
 
-.continue-search-block{
+.continue-search-block {
     display: flex;
     flex-wrap: nowrap;
 }

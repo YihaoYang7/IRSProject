@@ -6,20 +6,68 @@
     <link rel="stylesheet" th:href="@{/css/layui.css}">
     <link rel="stylesheet" th:href="@{/css/search.css}">
     <link rel="stylesheet" th:href="@{/css/modules/layer/default/layer.css}">
-    <link rel="stylesheet" th:href="@{/css/autoComplete.min.css}">
+    <script>
+        function getInputSuggestion() {
+            let characters = $('#autoComplete').val();
+            if (characters === '')
+                return;
+            let requestData = {
+                keywords: characters
+            };
+            $.ajax({
+                type: 'post',
+                url: '/input',
+                data: JSON.stringify(requestData),
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (data) {
+                    $("#inputSuggestion").html("");
+                    if (data != "null") {
+                        for (var i = 0; i < $(data).length; i++) {
+                            $("#inputSuggestion").append('<div class="item" onclick="mousedown(this)">' + data[i].name + '</div>');
+                        }
+                        $("#inputSuggestion").slideDown();
+                    }
+                }
+            })
+        }
+    </script>
 </head>
 <body>
 <div class="layui-fluid" style="margin-top: 30pt; height: 100%;">
     <div class="layui-container">
-        <div class="layui-row layui-col-space30" style="margin: 0px 5px">
+        <!--        <div class="layui-row layui-col-space30" style="margin: 0px 5px;">
+                    <div class="layui-col-md5">
+                        <input id="autoComplete" class=" layui-input" type="text">
+                    </div>
+                    <div class="layui-col-md3 layui-col-md-offset1">
+                        <input id="submitButton" class=" layui-btn" type="button" value="submit">
+                    </div>
+                </div>-->
+        <div class="layui-row layui-col-space30">
             <div class="layui-col-md5">
-                <input id="autoComplete" class=" layui-input" type="text">
+                <table style="width: 100%">
+                    <tr>
+                        <td>
+                            <input id="autoComplete" class="layui-input" type="text" onkeyup="getInputSuggestion()">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="inputSuggestion" class="hidden">
+
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
-            <div class="layui-col-md3">
+            <div class="layui-col-md3 ">
                 <input id="submitButton" class=" layui-btn" type="button" value="submit">
             </div>
         </div>
     </div>
+
+
     <div class="layui-container" id="query-reslult-contaioner">
         <div class="result-container" id="rd">
         </div>
@@ -31,37 +79,16 @@
 </body>
 <script th:src="@{/js/jquery-3.3.1.js}"></script>
 <script th:src="@{/js/layer.js}"></script>
-<script th:src="@{/js/autoComplete.min.js}"></script>
 <script>
-   /* let inputData;
 
-    $("#autoComplete").change(function () {
-        let characters = $('#autoComplete').val();
-        if (characters === '')
-            return
-        let data = {
-            keywords: characters
-        };
-        $.ajax({
-            type: 'post',
-            url: '/spell',
-            data: JSON.stringify(data),
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (results) {
-                inputData = JSON.parse(results);
-            }
-        });
-    });
+    function mousedown(object) {
+        $("#intxt").val($(object).text());
+        $("#inputSuggestion").fadeOut();
+    }
 
-    const autoCompletes = new autoComplete({
-        data: inputData,
-        resultItem: {
-            highlight: {
-                render: true
-            }
-        }
-    });*/
+    function lost() {
+        $("#inputSuggestion").fadeOut();
+    }
 
     $("#submitButton").click(function () {
         $("#rd").find("*").remove();
