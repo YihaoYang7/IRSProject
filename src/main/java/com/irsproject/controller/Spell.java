@@ -5,7 +5,6 @@ import org.apache.lucene.search.spell.JaroWinklerDistance;
 import org.apache.lucene.search.spell.SpellChecker;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Controller;
@@ -21,8 +20,6 @@ import java.util.*;
 @Controller
 public class Spell
 {
-    @Value("${project.new.index.path}")
-    private String indexPath;
 
     @RequestMapping("/spell")
     @ResponseBody
@@ -31,6 +28,9 @@ public class Spell
         String spellResults = "";
         try
         {
+            Properties properties = PropertiesLoaderUtils.loadProperties(new ClassPathResource("/application" +
+                    ".properties"));
+            String dirPath = properties.getProperty("index.path");
             LinkedList<String> spellList = new LinkedList<String>();
             Gson gson = new Gson();
             String keywords = p.get("keywords");
@@ -43,7 +43,7 @@ public class Spell
             for (int i = 0; i < list.size(); i++)
             {
                 keywordsarr[i] = list.get(i);
-                Directory directory = FSDirectory.open(Paths.get(indexPath));
+                Directory directory = FSDirectory.open(Paths.get(dirPath));
                 SpellChecker checker = new SpellChecker(directory);
                 checker.setStringDistance(new JaroWinklerDistance());
                 String[] str = checker.suggestSimilar(keywordsarr[i], 5);
@@ -52,10 +52,8 @@ public class Spell
                 if (keywordsarr[i].equals(suggestions[i].substring(0, suggestions[i].length() - 1))) count++;
                 else keywordsarr[i] = suggestions[i];
             }
-            if (count == list.size())
-            {
-                spellResults = gson.toJson(spellList);
-            } else
+            if (count == list.size()) spellResults = gson.toJson(spellList);
+            else
             {
                 for (int i = 0; i < list.size(); i++)
                 {
