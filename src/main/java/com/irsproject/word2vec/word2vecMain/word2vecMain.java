@@ -8,6 +8,7 @@ import java.util.Set;
 
 
 import com.google.gson.Gson;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,13 +18,17 @@ import java.util.*;
 
 @Controller
 public class word2vecMain {
+
+    @Value("${topic.index}")
+    private String topicIndex;
+
     @RequestMapping("/word2vec")
     @ResponseBody
     public String Word2Vec(@RequestBody Map<String, String> p) {
         String wordResults = "";
         String keywords = p.get("keywords");
         Gson gson = new Gson();
-        String modelFilePath = "index.nn";
+        String modelFilePath = topicIndex;
         LinkedList wordList = new LinkedList();
         ArrayList<String> arr = new ArrayList<String>();
         StringTokenizer st = new StringTokenizer(keywords, " ");

@@ -5,6 +5,7 @@ import org.apache.lucene.search.spell.JaroWinklerDistance;
 import org.apache.lucene.search.spell.SpellChecker;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,9 @@ import java.util.*;
 
 @Controller
 public class Spell {
+
+    @Value("${spellcheck.index}")
+    private String spellIndex;
 
     @RequestMapping("/spell")
     @ResponseBody
@@ -36,7 +40,7 @@ public class Spell {
             int count = 0;
             for(int i = 0 ;i < list.size() ; i ++) {
                 keywordsarr[i] = list.get(i);
-                Directory directory = FSDirectory.open(Paths.get("spell_index"));
+                Directory directory = FSDirectory.open(Paths.get(spellIndex));
                 SpellChecker checker = new SpellChecker(directory);
                 checker.setStringDistance(new JaroWinklerDistance());
                 String[] str = checker.suggestSimilar(keywordsarr[i], 5);
