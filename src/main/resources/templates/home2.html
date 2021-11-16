@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Articles</title>
+    <link rel="stylesheet" th:href="@{/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/css/search.css}">
+    <link rel="stylesheet" th:href="@{/css/modules/layer/default/layer.css}">
+</head>
+<body>
+<div class="layui-fluid" style="margin-top: 30pt; height: 100%;">
+    <div class="layui-container">
+        <div class="layui-row layui-col-space30">
+            <div class="layui-col-md5">
+                <table style="width: 100%">
+                    <tr>
+                        <td>
+                            <input id="autoComplete" class="layui-input" type="text" onkeyup="getInputSuggestion()">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 2px">
+                            <div id="inputSuggestion" class="hidden">
+
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="layui-col-md1 ">
+                <input id="submitButton" class=" layui-btn" type="button" value="submit">
+            </div>
+            <div class="layui-col-md1 ">
+                <input id="spellCheckBtn" class="layui-btn layui-btn-normal" type="button" value="Spell Check">
+            </div>
+            <div class="layui-col-md1 ">
+                <input id="word2vecBtn" class="layui-btn layui-btn-warm" type="button" value="Related Topics">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-container" id="query-reslult-contaioner">
+        <div class="result-container" id="rd">
+        </div>
+        <div class="continue-search-block">
+
+        </div>
+    </div>
+</div>
+</body>
+<script th:src="@{/js/jquery-3.3.1.js}"></script>
+<script th:src="@{/js/layer.js}"></script>
+<script th:src="@{/js/search.js}"></script>
+<script>
+
+    $("#spellCheckBtn").click(function () {
+        $("#rd").find("*").remove();
+        let k = $("#autoComplete").val();
+        let data = {
+            keywords: k
+        };
+        if (k === '') {
+            layer.msg('Please type keywords', {skin: 'layui-layer-molv'}, {time: 2})
+            return;
+        }
+        $.ajax({
+            type: 'post',
+            url: '/spell',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (spellResults){
+                if ( spellResults !='' )
+                    $("#rd").append( '<br>' + '<font>' + ' Did you mean: </font>' + '<font color="#0000FF">' + spellResults + '</font>');
+            }
+        });
+    });
+
+
+    $("#word2vecBtn").click(function () {
+        $("#rd").find("*").remove();
+        let k = $("#autoComplete").val();
+        let data = {
+            keywords: k
+        };
+        if (k === '') {
+            layer.msg('Please type keywords', {skin: 'layui-layer-molv'}, {time: 2})
+            return;
+        }
+    $.ajax({
+        type: 'post',
+        url: '/word2vec',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (wordResults){
+            if ( wordResults !='' )
+                $("#rd").append( '<br>' + '<font>' + ' Are you also looking for : </font>' + '<font color="#9400D3">' + wordResults + '</font>');
+          }
+      });
+    })
+
+</script>
+</html>
+
