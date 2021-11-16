@@ -30,9 +30,12 @@
             <div class="layui-col-md1 ">
                 <input id="submitButton" class=" layui-btn" type="button" value="submit">
             </div>
-            <!--<div class="layui-col-md1 ">
+            <div class="layui-col-md2 ">
                 <input id="spellCheckBtn" class="layui-btn layui-btn-normal" type="button" value="Spell Check">
-            </div>-->
+            </div>
+            <div class="layui-col-md2 ">
+                <input id="word2vecBtn" class="layui-btn layui-btn-warm" type="button" value="Related Topics">
+            </div>
         </div>
     </div>
 
@@ -49,26 +52,5 @@
 <script th:src="@{/js/jquery-3.3.1.js}"></script>
 <script th:src="@{/js/layer.js}"></script>
 <script th:src="@{/js/search.js}"></script>
-<script>
-    $("#spellCheckBtn").click(function () {
-        let k = $("#autoComplete").val();
-        let data = {
-            keywords: k
-        };
-        if (k === '') {
-            layer.msg('Please type keywords', {skin: 'layui-layer-molv'}, {time: 2})
-            return;
-        }
-        $.ajax({
-            type: 'post',
-            url: '/spell',
-            data: JSON.stringify(data),
-            dataType: 'json',
-            contentType: 'application/json',
-            onsuccess: function (){
-
-            }
-        });
-    })
-</script>
 </html>
+
