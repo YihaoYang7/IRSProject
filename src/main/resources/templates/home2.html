@@ -52,55 +52,5 @@
 <script th:src="@{/js/jquery-3.3.1.js}"></script>
 <script th:src="@{/js/layer.js}"></script>
 <script th:src="@{/js/search.js}"></script>
-<script>
-
-    $("#spellCheckBtn").click(function () {
-        $("#rd").find("*").remove();
-        let k = $("#autoComplete").val();
-        let data = {
-            keywords: k
-        };
-        if (k === '') {
-            layer.msg('Please type keywords', {skin: 'layui-layer-molv'}, {time: 2})
-            return;
-        }
-        $.ajax({
-            type: 'post',
-            url: '/spell',
-            data: JSON.stringify(data),
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (spellResults){
-                if ( spellResults !='' )
-                    $("#rd").append( '<br>' + '<font>' + ' Did you mean: </font>' + '<font color="#0000FF">' + spellResults + '</font>');
-            }
-        });
-    });
-
-
-    $("#word2vecBtn").click(function () {
-        $("#rd").find("*").remove();
-        let k = $("#autoComplete").val();
-        let data = {
-            keywords: k
-        };
-        if (k === '') {
-            layer.msg('Please type keywords', {skin: 'layui-layer-molv'}, {time: 2})
-            return;
-        }
-    $.ajax({
-        type: 'post',
-        url: '/word2vec',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        contentType: 'application/json',
-        success: function (wordResults){
-            if ( wordResults !='' )
-                $("#rd").append( '<br>' + '<font>' + ' Are you also looking for : </font>' + '<font color="#9400D3">' + wordResults + '</font>');
-          }
-      });
-    })
-
-</script>
 </html>
 
