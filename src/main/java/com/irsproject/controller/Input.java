@@ -19,14 +19,12 @@ public class Input {
         String inputResults = null;
         String keywords = p.get("keywords");
         Gson gson = new Gson();
-        ReadFile read = new ReadFile();
         LinkedList inputList = new LinkedList();
         ArrayList<String> arr = new ArrayList<String>();
         StringTokenizer st = new StringTokenizer(keywords, " ");
         while (st.hasMoreTokens())
             arr.add(st.nextToken());
         for(int i = 0 ;i < arr.size() ; i ++) {
-            List<String> list = read.findWord(arr.get(i));
             if (list.size() > 10)
                 list = list.subList(0, 10);
             inputList.add(list);
