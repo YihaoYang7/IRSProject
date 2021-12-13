@@ -1,6 +1,7 @@
 package com.irsproject.controller;
 
 import com.google.gson.Gson;
+import com.irsproject.dao.ClassificationDao;
 import com.irsproject.util.IndexCreator;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -13,6 +14,7 @@ import org.apache.lucene.search.*;
 import org.apache.lucene.search.highlight.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -24,7 +26,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.net.http.HttpRequest;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -35,6 +36,15 @@ import java.util.regex.Pattern;
 @Controller
 public class SearchEngine
 {
+    @Autowired
+    ClassificationDao dao;
+
+    @RequestMapping("/home/catalog")
+    public String toResult()
+    {
+        return "ai";
+    }
+
     @RequestMapping("/init")
     public String test()
     {
@@ -138,7 +148,6 @@ public class SearchEngine
                 {
                     Document doc = searcher.doc(scoreDoc.doc);
                     HashMap<String, Object> result = new HashMap<>();
-//                    result.put("title", doc.get("title"));
                     String hTitle = highlighter.getBestFragment(new StandardAnalyzer(), "title", doc.get("title"));
                     result.put("title", hTitle == null ? doc.get("title") : hTitle);
                     String hAuthors = highlighter.getBestFragment(new StandardAnalyzer(), "author", doc.get("author"));
@@ -211,5 +220,14 @@ public class SearchEngine
             }
         }
         return session;
+    }
+
+    @RequestMapping("/getCatalogues")
+    @ResponseBody
+    public String getCatalogues()
+    {
+        LinkedList<String> catalogues = dao.queryCatalogues();
+        Gson gson = new Gson();
+        return gson.toJson(catalogues);
     }
 }

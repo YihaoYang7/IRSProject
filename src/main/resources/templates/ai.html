@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Article</title>
+    <link rel="stylesheet" th:href="@{/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/css/search.css}">
+    <link rel="stylesheet" th:href="@{/css/modules/layer/default/layer.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+</head>
+<body>
+<div class="layui-fluid" style="margin-top: 30pt; height: 100%;">
+    <div class="layui-container">
+        <div class="layui-col-md2">
+            <div class="result-border">
+                <ul class="list-group" id="cataloguesList">
+
+                </ul>
+            </div>
+        </div>
+        <div class="layui-col-md8">
+            <div class="layui-container">
+                <div class="layui-row layui-col-space30">
+                    <div class="layui-col-md5">
+                        <table style="width: 100%">
+                            <tr>
+                                <td>
+                                    <input id="autoComplete" class="layui-input" type="text"
+                                           onkeyup="getInputSuggestion()">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 2px">
+                                    <div id="inputSuggestion" class="hidden">
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="layui-col-md1 ">
+                        <input id="submitButton" class=" layui-btn" type="button" value="submit">
+                    </div>
+                    <div class="layui-col-md2 ">
+                        <input id="spellCheckBtn" class="layui-btn layui-btn-normal" type="button" value="Spell Check">
+                    </div>
+                    <div class="layui-col-md2 ">
+                        <input id="word2vecBtn" class="layui-btn layui-btn-warm" type="button" value="Related Topics">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-container" id="query-reslult-contaioner">
+                <div class="result-container" id="rd">
+                    <div class="layui-row">
+                        <p class="text-info">10.1.1.2.2.txt</p>
+                        <div class="layui-col-md10">
+                            A Corpus-Independent Feature Set for Style-Based Text Categorization
+                            Moshe Koppel
+                            Navot Akiva
+                            Ido Dagan
+
+                            {koppel, navot, dagan}@ cs.biu.ac.il
+                            Computer Science Department, Bar Ilan University, Ramat Gan 52900, Israel
+                            Abstract
+
+                            We suggest a corpus-independent feature set
+                            appropriate for style-based text categorization
+                            problems. To achieve this, we introduce a new
+                            measure on linguistic features, called stabi,...
+                        </div>
+                    </div>
+                    <div class="layui-row">
+                        <p class="text-info">10.1.1.2.4.txt</p>
+                        <div class="layui-col-md10">
+                            A Sequential Sampling Algorithm for a
+                            General Class of Utility Criteria
+                            Tobias Scheffer and Stefan Wrobel
+
+                            University of Magdeburg, FIN/IWS
+                            P.O. Box 4120
+                            39016 Magdeburg, Germany
+
+                            scheffer, wrobel@iws.cs.uni-magdeburg.de
+                            ABSTRACT
+
+                            Many discovery problems, e.g., subgroup or association rule
+                            discovery, can naturally be cast as n-best hypothesis problems
+                            where the goal is to nd the n hypotheses from a given
+                            hypothesis space that score best according to a given utility
+                            function. We present a sampling algorithm that solves this
+                            problem by issuing a small number of database queries while
+                            guaranteeing precise bounds on condence and quality of solutions.
+                            Known sampling algorithms assume that the utility
+                            be the average (over the e...
+                        </div>
+                    </div>
+                    <div class="layui-row">
+                        <p class="text-info">10.1.1.2.21.txt</p>
+                        <div class="layui-col-md10">
+                            Features and Feature Interactions in Software
+                            Engineering using Logic
+                            Ragnhild Van Der Straeten Johan Brichau ∗
+                            rvdstrae@vub.ac.be jbrichau@vub.ac.be
+                            System and Software Engineering Lab Programming Technology Lab
+                            Vrije Universiteit Brussel, Belgium Vrije Universiteit Brussel, Belgium
+                            Abstract
+                            Feature interactions are common when composing a software unit
+                            out of several features. We report on two experimental approaches
+                            using logic to describe features and feature interactions. The first approach
+                            proposes description logic as a formalization of feature models
+                            which allow reasoning about features. In the second approach, a metalevel
+                            representation of the software is proposed to capture conditions
+                            on features. Thes...
+                        </div>
+                    </div>
+                    <div class="layui-row">
+                        <p class="text-info">10.1.1.2.133.txt</p>
+                        <div class="layui-col-md10">
+                            FACIAL SIMILARITY ACROSS AGE,DISGUISE,ILLUMINATION AND POSE
+                            Narayanan Ramanathan, Rama Chellappa
+                            Center for Automation Research and
+                            Dept. of Electrical & Computer Engineering
+                            University of Maryland, College Park, MD 20742
+                            ABSTRACT
+                            Illumination, pose variations, disguises, aging effects and expression
+                            variations are some of the key factors that affect the performance
+                            of face recognition systems. Face recognition systems
+                            have always been studied from a recognition perspective. Our
+                            emphasis is on deriving a measure of similarity between faces.
+                            The similarity measure provides insights into the role each of the
+                            above mentioned variations play in affecting the performance of
+                            face recognition systems. In the process of computing the similarity
+                            measure between faces, we suggest a framework to compensate
+                            for pose va...
+                        </div>
+                    </div>
+                </div>
+                <div class="continue-search-block">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script th:src="@{/js/jquery-3.3.1.js}"></script>
+<script th:src="@{/js/layer.js}"></script>
+<script th:src="@{/js/bootstrap/bootstrap.bundle.js}"></script>
+<script>
+    $(function () {
+        let catalogUrl = "/getCatalogues";
+        $.ajax({
+            type: 'get',
+            url: catalogUrl,
+            success: function (results) {
+                results = JSON.parse(results);
+                for (let i = 0; i < results.length; i++) {
+                    let catalog = results[i];
+                    if (catalog === "Artificial Intelligence\r\n") {
+                        let catalogItem = '<li class="list-group-item list-group-item-action active">' + catalog +
+                            '</li>';
+                        $(catalogItem).appendTo("#cataloguesList")
+                    } else {
+                        let catalogItem = '<li class="list-group-item list-group-item-action">' + catalog + '</li>';
+                        $(catalogItem).appendTo("#cataloguesList")
+                    }
+                }
+            }
+        })
+    });
+</script>
+</html>
+
